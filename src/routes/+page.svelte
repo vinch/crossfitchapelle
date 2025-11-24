@@ -125,7 +125,10 @@
 <main class="main">
   <section id="accueil" class="section hero-section">
     <video class="hero-video" autoplay muted loop playsinline>
-      <source src="/video.mp4" type="video/mp4" />
+      <source
+        src="https://grmmpftrvjoyzbvheuvy.supabase.co/storage/v1/object/public/videos/video.mp4"
+        type="video/mp4"
+      />
     </video>
     <div class="hero-overlay"></div>
     <div class="section-content hero-content">
