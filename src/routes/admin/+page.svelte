@@ -19,12 +19,13 @@
   // Formulaire et modale
   let editingId = $state<string | null>(null);
   let showModal = $state(false);
-  let formData = $state<ScheduleInsert>({
+  let formData = $state<ScheduleInsert & { note?: string }>({
     course_type_id: "",
     day: 1,
     start_hour: "09:00",
     end_hour: "10:00",
     priority: 1,
+    note: "",
   });
 
   onMount(async () => {
@@ -69,6 +70,7 @@
       start_hour: "09:00",
       end_hour: "10:00",
       priority: 1,
+      note: "",
     };
     showModal = true;
   }
@@ -81,6 +83,7 @@
       start_hour: schedule.start_hour,
       end_hour: schedule.end_hour,
       priority: (schedule as any).priority ?? 1,
+      note: (schedule as any).note || "",
     };
     showModal = true;
   }
@@ -94,6 +97,7 @@
       start_hour: "09:00",
       end_hour: "10:00",
       priority: 1,
+      note: "",
     };
   }
 
@@ -113,6 +117,7 @@
             start_hour: formData.start_hour,
             end_hour: formData.end_hour,
             priority: formData.priority ?? 1,
+            note: formData.note || null,
           } as any)
           .eq("id", editingId);
 
@@ -125,6 +130,7 @@
             start_hour: formData.start_hour,
             end_hour: formData.end_hour,
             priority: formData.priority ?? 1,
+            note: formData.note || null,
           } as any,
         ]);
 
@@ -327,6 +333,16 @@
             >
           </div>
 
+          <div class="form-group">
+            <label for="note">Note</label>
+            <textarea
+              id="note"
+              bind:value={formData.note}
+              rows="3"
+              placeholder="Note optionnelle pour cet horaire"
+            ></textarea>
+          </div>
+
           <div class="form-actions">
             <button type="submit" class="btn-primary">Enregistrer</button>
             <button type="button" class="btn-secondary" onclick={cancelEdit}>
@@ -472,6 +488,11 @@
   .form-group {
     display: flex;
     flex-direction: column;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group:last-of-type {
+    margin-bottom: 0;
   }
 
   label {
@@ -480,18 +501,32 @@
     font-weight: 500;
   }
 
+  .form-group small {
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.875rem;
+  }
+
   input,
-  select {
+  select,
+  textarea {
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
+    font-family: inherit;
   }
 
   input:focus,
-  select:focus {
+  select:focus,
+  textarea:focus {
     outline: none;
     border-color: #ffde01;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
   }
 
   .form-actions {

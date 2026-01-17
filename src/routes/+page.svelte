@@ -9,6 +9,8 @@
   let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
   let mobileMenuOpen = $state<boolean>(false);
   let isScrolled = $state<boolean>(false);
+  let selectedSchedule = $state<ScheduleWithCourseType | null>(null);
+  let showScheduleModal = $state<boolean>(false);
 
   // Horaires
   let supabase = createClient();
@@ -61,6 +63,16 @@
 
   function closeMobileMenu() {
     mobileMenuOpen = false;
+  }
+
+  function openScheduleModal(schedule: ScheduleWithCourseType) {
+    selectedSchedule = schedule;
+    showScheduleModal = true;
+  }
+
+  function closeScheduleModal() {
+    selectedSchedule = null;
+    showScheduleModal = false;
   }
 
   const menuItems = [
@@ -349,8 +361,53 @@
 
   <section id="tarifs" class="section">
     <div class="section-content">
-      <h2>Tarifs</h2>
-      <p>Contenu de la section Tarifs</p>
+      <div class="section-title-banner">
+        <p class="section-subtitle">Rejoignez la famille</p>
+        <h2 class="section-main-title">BECOME A MEMBER</h2>
+      </div>
+      <div class="pricing-container">
+        <div class="pricing-card light">
+          <div class="pricing-header">
+            <h3>Sans durée d'engagement</h3>
+          </div>
+          <div class="pricing-body">
+            <p class="pricing-price">Tarif sur demande*</p>
+            <ul class="pricing-features">
+              <li>Accès illimité à la salle lors des horaires Free Access</li>
+              <li>
+                Accès à 1 WOD par jour et tous les jours si vous le souhaitez
+              </li>
+            </ul>
+            <p class="pricing-note">*25€ de frais annuels</p>
+            <p class="pricing-note">*1 mois de préavis en cas de résiliation</p>
+          </div>
+        </div>
+        <div class="pricing-card dark">
+          <div class="pricing-header">
+            <h3>Engagement minimum 12 mois</h3>
+          </div>
+          <div class="pricing-body">
+            <p class="pricing-price yellow">Tarif sur demande*</p>
+            <ul class="pricing-features">
+              <li>Accès illimité à la salle lors des horaires Free Access</li>
+              <li>
+                Accès à 1 WOD par jour et tous les jours si vous le souhaitez
+              </li>
+            </ul>
+            <p class="pricing-note">*25€ de frais annuels</p>
+          </div>
+        </div>
+      </div>
+      <div class="pricing-cta">
+        <a
+          href="mailto:info@crossfitchapelle.com?subject={encodeURIComponent(
+            "Je voudrais m'inscrire aux initiations"
+          )}"
+          class="cta-button"
+        >
+          S'inscrire aux initiations
+        </a>
+      </div>
     </div>
   </section>
 
@@ -391,6 +448,11 @@
                       style="background-color: {courseColor}; color: {courseTextColor}; top: {topPosition}px; height: {height}px;"
                       data-start={schedule.start_hour}
                       data-end={schedule.end_hour}
+                      onclick={() => openScheduleModal(schedule)}
+                      onkeydown={(e) =>
+                        e.key === "Enter" && openScheduleModal(schedule)}
+                      role="button"
+                      tabindex="0"
                     >
                       <span class="schedule-time">
                         {formatTime(schedule.start_hour)}
@@ -398,6 +460,11 @@
                       <span class="schedule-type">
                         {schedule.course_types.name}
                       </span>
+                      {#if (schedule as any).note}
+                        <span class="schedule-note">
+                          {(schedule as any).note}
+                        </span>
+                      {/if}
                     </div>
                   {/each}
                 </div>
@@ -416,6 +483,64 @@
     </div>
   </section>
 </main>
+
+<!-- Modale pour afficher les détails d'un horaire -->
+{#if showScheduleModal && selectedSchedule}
+  <div
+    class="schedule-modal-overlay"
+    onclick={closeScheduleModal}
+    onkeydown={(e) => e.key === "Escape" && closeScheduleModal()}
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+  >
+    <div
+      class="schedule-modal-content"
+      onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.stopPropagation()}
+      role="document"
+    >
+      <div class="schedule-modal-header">
+        <h2>{selectedSchedule.course_types.name}</h2>
+        <button
+          class="schedule-modal-close"
+          onclick={closeScheduleModal}
+          aria-label="Fermer"
+        >
+          ×
+        </button>
+      </div>
+      <div class="schedule-modal-body">
+        <div class="schedule-modal-info">
+          <div class="schedule-modal-info-item">
+            <span class="schedule-modal-label">Horaire :</span>
+            <span class="schedule-modal-value"
+              >{DAYS_OF_WEEK[selectedSchedule.day - 1]} de {formatTime(
+                selectedSchedule.start_hour
+              )} à {formatTime(selectedSchedule.end_hour)}</span
+            >
+          </div>
+          {#if (selectedSchedule.course_types as any).description}
+            <div class="schedule-modal-info-item schedule-modal-description">
+              <span class="schedule-modal-label">Description :</span>
+              <p class="schedule-modal-value">
+                {(selectedSchedule.course_types as any).description}
+              </p>
+            </div>
+          {/if}
+          {#if (selectedSchedule as any).note}
+            <div class="schedule-modal-info-item schedule-modal-note">
+              <span class="schedule-modal-label">Note :</span>
+              <p class="schedule-modal-value">
+                {(selectedSchedule as any).note}
+              </p>
+            </div>
+          {/if}
+        </div>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <footer class="footer">
   <div class="footer-container">
@@ -762,14 +887,31 @@
   }
 
   .section-content h2 {
-    font-size: 2.5rem;
+    font-size: 4rem;
     margin-bottom: 1rem;
     color: #333;
   }
 
-  .section-content p {
+  .section-title-banner {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-subtitle {
     font-size: 1.2rem;
     color: #666;
+    font-style: italic;
+    margin: 0 0 0.5rem 0;
+    text-transform: none;
+    font-weight: normal;
+  }
+
+  .section-main-title {
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 0.1em;
   }
 
   .horaires-content {
@@ -891,6 +1033,10 @@
     .schedule-type {
       font-size: 0.75rem;
     }
+
+    .schedule-note {
+      font-size: 0.65rem;
+    }
   }
 
   .schedule-block {
@@ -968,10 +1114,24 @@
     text-transform: capitalize;
     line-height: 1.1;
     opacity: 0.9;
-    word-break: break-word;
     hyphens: auto;
     flex-shrink: 0;
-    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .schedule-note {
+    font-size: 0.6rem;
+    line-height: 1.2;
+    opacity: 0.85;
+    display: block;
+    hyphens: auto;
+    word-break: break-word;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .hero-content {
@@ -1026,6 +1186,216 @@
     transform: translateY(-2px);
   }
 
+  /* Tarifs */
+  .pricing-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .pricing-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pricing-card.dark {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .pricing-card.light {
+    background-color: #fff;
+    color: #333;
+  }
+
+  .pricing-header {
+    background-color: #ffde01;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .pricing-header h3 {
+    margin: 0;
+    color: #000;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .pricing-body {
+    padding: 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pricing-price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0 0 1.5rem 0;
+    opacity: 0.7;
+  }
+
+  .pricing-price.yellow {
+    color: #ffde01;
+    opacity: 1;
+  }
+
+  .pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+    flex: 1;
+  }
+
+  .pricing-features li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pricing-features li:last-child {
+    border-bottom: none;
+  }
+
+  .pricing-card.light .pricing-features li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .pricing-card.light .pricing-features li:last-child {
+    border-bottom: none;
+  }
+
+  .pricing-note {
+    font-size: 0.65rem;
+    margin: 0.25rem 0;
+    opacity: 0.8;
+    color: #666;
+  }
+
+  .pricing-card.light .pricing-note {
+    color: #ccc;
+    opacity: 1;
+  }
+
+  .pricing-cta {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  /* Modale pour les détails d'un horaire */
+  .schedule-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+  }
+
+  .schedule-modal-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: scheduleModalFadeIn 0.2s ease-out;
+  }
+
+  @keyframes scheduleModalFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .schedule-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .schedule-modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .schedule-modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+
+  .schedule-modal-close:hover {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+
+  .schedule-modal-body {
+    padding: 2rem;
+  }
+
+  .schedule-modal-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .schedule-modal-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .schedule-modal-label {
+    font-weight: bold;
+    color: #666;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .schedule-modal-value {
+    color: #333;
+    font-size: 1.1rem;
+  }
+
+  .schedule-modal-description p,
+  .schedule-modal-note p {
+    margin: 0;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .header {
@@ -1064,6 +1434,19 @@
 
     .section-content h2 {
       font-size: 2rem;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+    }
+
+    .pricing-container {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .pricing-body {
+      padding: 1.5rem;
     }
 
     .hero-title {
@@ -1106,6 +1489,10 @@
 
     .schedule-type {
       font-size: 0.7rem;
+    }
+
+    .schedule-note {
+      font-size: 0.6rem;
     }
   }
 

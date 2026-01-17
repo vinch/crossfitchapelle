@@ -16,11 +16,16 @@
   let editingId = $state<string | null>(null);
   let showModal = $state(false);
   let formData = $state<
-    CourseTypeInsert & { color?: string; text_color?: string }
+    CourseTypeInsert & {
+      color?: string;
+      text_color?: string;
+      description?: string;
+    }
   >({
     name: "",
     color: "#f0f0f0",
     text_color: "#000000",
+    description: "",
   });
 
   onMount(async () => {
@@ -52,6 +57,7 @@
       name: "",
       color: "#f0f0f0",
       text_color: "#000000",
+      description: "",
     };
     showModal = true;
   }
@@ -62,6 +68,7 @@
       name: courseType.name,
       color: (courseType as any).color || "#f0f0f0",
       text_color: (courseType as any).text_color || "#000000",
+      description: (courseType as any).description || "",
     };
     showModal = true;
   }
@@ -73,6 +80,7 @@
       name: "",
       color: "#f0f0f0",
       text_color: "#000000",
+      description: "",
     };
   }
 
@@ -183,6 +191,7 @@
             name: formData.name,
             color: formData.color,
             text_color: formData.text_color,
+            description: formData.description || null,
           } as any)
           .eq("id", editingId);
 
@@ -195,6 +204,7 @@
               name: formData.name,
               color: formData.color,
               text_color: formData.text_color,
+              description: formData.description || null,
             } as any,
           ]);
 
@@ -356,6 +366,16 @@
               required
               placeholder="ex: wod, strength, etc."
             />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              bind:value={formData.description}
+              rows="3"
+              placeholder="Description du type de cours (optionnel)"
+            ></textarea>
           </div>
 
           <div class="form-group">
@@ -579,16 +599,24 @@
     font-weight: 500;
   }
 
-  input {
+  input,
+  textarea {
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
+    font-family: inherit;
   }
 
-  input:focus {
+  input:focus,
+  textarea:focus {
     outline: none;
     border-color: #ffde01;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
   }
 
   .color-input-group {
