@@ -386,21 +386,33 @@
             class:last-hovered={lastHoveredImage === "image-1"}
             onmouseenter={() => handleImageHover("image-1")}
           >
-            <img src="/CTA1.png" alt="CrossFit" class="a-propos-image" />
+            <img
+              src="/CTA1.png"
+              alt="Membre CrossFit Chapelle en entraînement"
+              class="a-propos-image"
+            />
           </div>
           <div
             class="a-propos-image-wrapper image-2"
             class:last-hovered={lastHoveredImage === "image-2"}
             onmouseenter={() => handleImageHover("image-2")}
           >
-            <img src="/CTA2.png" alt="CrossFit" class="a-propos-image" />
+            <img
+              src="/CTA2.png"
+              alt="Entraînement CrossFit à Chapelle-lez-Herlaimont"
+              class="a-propos-image"
+            />
           </div>
           <div
             class="a-propos-image-wrapper image-3"
             class:last-hovered={lastHoveredImage === "image-3"}
             onmouseenter={() => handleImageHover("image-3")}
           >
-            <img src="/CTA3.png" alt="CrossFit" class="a-propos-image" />
+            <img
+              src="/CTA3.png"
+              alt="Coaching sportif adapté à tous les niveaux"
+              class="a-propos-image"
+            />
           </div>
         </div>
       </div>
