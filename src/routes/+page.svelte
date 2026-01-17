@@ -478,8 +478,59 @@
 
   <section id="contact" class="section">
     <div class="section-content">
-      <h2>Contact</h2>
-      <p>Contenu de la section Contact</p>
+      <div class="contact-container">
+        <div class="contact-map">
+          <a
+            href="https://maps.app.goo.gl/mP7Te7r11R9Vqpg47"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="map-link"
+          >
+            <img src="/map.png" alt="Carte de localisation" class="map-image" />
+          </a>
+        </div>
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="icon"
+              >
+                <path
+                  d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                />
+              </svg>
+            </div>
+            <a href="mailto:info@crossfitchapelle.com" class="contact-link"
+              >info@crossfitchapelle.com</a
+            >
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="icon"
+              >
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                />
+              </svg>
+            </div>
+            <a
+              href="https://maps.app.goo.gl/mP7Te7r11R9Vqpg47"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact-link address-link"
+            >
+              Clos du Chêne Au Bois 8,<br />7160 Chapelle-lez-Herlaimont
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -802,19 +853,34 @@
   }
 
   .section {
-    min-height: 100vh;
     padding: 4rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .section:nth-child(odd) {
+  /* .section:nth-child(odd) {
     background-color: #f9f9f9;
   }
 
   .section:nth-child(even) {
     background-color: #fff;
+  } */
+
+  #a-propos {
+    background-color: #fff;
+  }
+
+  #tarifs {
+    background-color: #ddd;
+  }
+
+  #horaires {
+    background-color: #fff;
+  }
+
+  #contact {
+    background-color: #ffde01 !important;
   }
 
   .hero-section {
@@ -886,10 +952,84 @@
     text-align: center;
   }
 
+  .contact-container {
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+    text-align: left;
+  }
+
+  .contact-map {
+    flex-shrink: 0;
+    max-width: 50%;
+  }
+
+  .map-link {
+    display: block;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+
+  .map-link:hover {
+    opacity: 0.9;
+  }
+
+  .map-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .contact-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .contact-item {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .contact-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.2rem;
+  }
+
+  .contact-icon .icon {
+    width: 2rem;
+    height: 2rem;
+    color: #333;
+  }
+
+  .contact-link {
+    color: #333;
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+  }
+
+  .contact-link:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+  }
+
+  .address-link {
+    cursor: pointer;
+  }
+
   .section-content h2 {
     font-size: 4rem;
-    margin-bottom: 1rem;
     color: #333;
+    margin: 0;
   }
 
   .section-title-banner {
@@ -967,6 +1107,18 @@
     .schedule-table {
       grid-template-columns: repeat(4, 1fr);
       gap: 0.75rem;
+    }
+
+    .contact-container {
+      gap: 2.5rem;
+    }
+
+    .contact-map {
+      max-width: 45%;
+    }
+
+    .contact-link {
+      font-size: 1.6rem;
     }
 
     .day-header {
@@ -1432,6 +1584,31 @@
       padding: 2rem 1rem;
     }
 
+    .contact-container {
+      flex-direction: column;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .contact-map {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .contact-info {
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    .contact-link {
+      font-size: 1.4rem;
+    }
+
+    .contact-icon .icon {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
     .section-content h2 {
       font-size: 2rem;
     }
@@ -1560,6 +1737,22 @@
 
     .social-link {
       font-size: 0.9rem;
+    }
+
+    .section-title-banner {
+      margin-bottom: 1.5rem;
+    }
+
+    .pricing-container {
+      margin: 1.5rem 0;
+    }
+
+    .pricing-cta {
+      margin-top: 1.5rem;
+    }
+
+    .cta-button {
+      margin: 0.5rem;
     }
   }
 </style>
