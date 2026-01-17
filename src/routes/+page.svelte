@@ -75,6 +75,12 @@
     showScheduleModal = false;
   }
 
+  let lastHoveredImage = $state<string | null>(null);
+
+  function handleImageHover(imageId: string) {
+    lastHoveredImage = imageId;
+  }
+
   const menuItems = [
     { id: "accueil", label: "Accueil" },
     { id: "a-propos", label: "À propos" },
@@ -354,8 +360,50 @@
 
   <section id="a-propos" class="section">
     <div class="section-content">
-      <h2>À propos</h2>
-      <p>Contenu de la section À propos</p>
+      <div class="a-propos-container">
+        <div class="a-propos-text">
+          <h2>C'est quoi&nbsp;?</h2>
+          <p>
+            <strong>Activités physiques POUR TOUS</strong> à partir de 6 ans.
+          </p>
+          <p>
+            <strong>Peu importe :</strong> votre état de forme, votre âge, vos objectifs,
+            vos besoins, votre niveau.
+          </p>
+          <p>
+            <strong>Nos coachs adaptent pour vous !!!</strong>
+          </p>
+          <a
+            href="mailto:info@crossfitchapelle.com?subject={encodeURIComponent(
+              "Je voudrais m'inscrire aux initiations"
+            )}"
+            class="cta-button">Rejoignez-nous</a
+          >
+        </div>
+        <div class="a-propos-images">
+          <div
+            class="a-propos-image-wrapper image-1"
+            class:last-hovered={lastHoveredImage === "image-1"}
+            onmouseenter={() => handleImageHover("image-1")}
+          >
+            <img src="/CTA1.png" alt="CrossFit" class="a-propos-image" />
+          </div>
+          <div
+            class="a-propos-image-wrapper image-2"
+            class:last-hovered={lastHoveredImage === "image-2"}
+            onmouseenter={() => handleImageHover("image-2")}
+          >
+            <img src="/CTA2.png" alt="CrossFit" class="a-propos-image" />
+          </div>
+          <div
+            class="a-propos-image-wrapper image-3"
+            class:last-hovered={lastHoveredImage === "image-3"}
+            onmouseenter={() => handleImageHover("image-3")}
+          >
+            <img src="/CTA3.png" alt="CrossFit" class="a-propos-image" />
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -868,7 +916,7 @@
   } */
 
   #a-propos {
-    background-color: #fff;
+    background-color: #333;
   }
 
   #tarifs {
@@ -950,6 +998,93 @@
     max-width: 1200px;
     width: 100%;
     text-align: center;
+  }
+
+  .a-propos-container {
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+    text-align: left;
+  }
+
+  .a-propos-text {
+    flex: 1;
+    max-width: 50%;
+  }
+
+  #a-propos .a-propos-text h2 {
+    color: #fff;
+  }
+
+  #a-propos .a-propos-text p {
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: #fff;
+    margin: 2rem 0;
+  }
+
+  .a-propos-images {
+    flex: 1;
+    position: relative;
+    max-width: 50%;
+    height: 500px;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+
+  .a-propos-image-wrapper {
+    position: absolute;
+    width: 70%;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .a-propos-image-wrapper.image-1 {
+    top: 2rem;
+    left: 2rem;
+    z-index: 2;
+    transform: rotate(-5deg);
+  }
+
+  .a-propos-image-wrapper.image-1:hover {
+    transform: scale(1.05) rotate(-8deg);
+    z-index: 4;
+  }
+
+  .a-propos-image-wrapper.image-2 {
+    bottom: 25%;
+    left: 20%;
+    z-index: 1;
+    transform: rotate(5deg);
+  }
+
+  .a-propos-image-wrapper.image-2:hover {
+    transform: scale(1.05) rotate(8deg);
+    z-index: 4;
+  }
+
+  .a-propos-image-wrapper.image-3 {
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 3;
+    transform: rotate(-3deg);
+  }
+
+  .a-propos-image-wrapper.image-3:hover {
+    transform: scale(1.05) rotate(-6deg);
+    z-index: 4;
+  }
+
+  .a-propos-image-wrapper.last-hovered {
+    z-index: 5;
+  }
+
+  .a-propos-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
   .contact-container {
@@ -1111,6 +1246,18 @@
     .schedule-table {
       grid-template-columns: repeat(4, 1fr);
       gap: 0.75rem;
+    }
+
+    .a-propos-container {
+      gap: 2.5rem;
+    }
+
+    .a-propos-text {
+      max-width: 45%;
+    }
+
+    .a-propos-images {
+      max-width: 55%;
     }
 
     .contact-container {
@@ -1339,6 +1486,16 @@
 
   .cta-button:hover {
     background-color: #333;
+    transform: translateY(-2px);
+  }
+
+  #a-propos .cta-button {
+    background-color: #ffde01;
+    color: #000;
+  }
+
+  #a-propos .cta-button:hover {
+    background-color: #e6c900;
     transform: translateY(-2px);
   }
 
@@ -1586,6 +1743,53 @@
 
     .section {
       padding: 2rem 1rem;
+    }
+
+    .a-propos-container {
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .a-propos-text {
+      max-width: 100%;
+    }
+
+    #a-propos .a-propos-text h2 {
+      font-size: 2rem;
+      color: #fff;
+    }
+
+    #a-propos .a-propos-text p {
+      font-size: 1.1rem;
+      margin: 1rem 0;
+    }
+
+    .a-propos-images {
+      display: none;
+    }
+
+    .a-propos-image-wrapper.image-1 {
+      transform: rotate(-3deg);
+    }
+
+    .a-propos-image-wrapper.image-1:hover {
+      transform: scale(1.05) rotate(-3deg);
+    }
+
+    .a-propos-image-wrapper.image-2 {
+      transform: rotate(3deg);
+    }
+
+    .a-propos-image-wrapper.image-2:hover {
+      transform: scale(1.05) rotate(3deg);
+    }
+
+    .a-propos-image-wrapper.image-3 {
+      transform: rotate(-2deg);
+    }
+
+    .a-propos-image-wrapper.image-3:hover {
+      transform: scale(1.05) rotate(-2deg);
     }
 
     .contact-container {
