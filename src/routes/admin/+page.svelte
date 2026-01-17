@@ -201,9 +201,11 @@
             <div class="schedules-list">
               {#each daySchedules as schedule}
                 {@const courseColor = schedule.course_types.color || "#f0f0f0"}
+                {@const courseTextColor =
+                  schedule.course_types.text_color || "#000000"}
                 <div
                   class="schedule-item"
-                  style="background-color: {courseColor}"
+                  style="background-color: {courseColor}; color: {courseTextColor};"
                 >
                   <div class="schedule-info">
                     <span class="schedule-time">
