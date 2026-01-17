@@ -962,16 +962,13 @@
   .contact-map {
     flex-shrink: 0;
     max-width: 50%;
+    padding: 1rem;
   }
 
   .map-link {
     display: block;
     cursor: pointer;
-    transition: opacity 0.3s ease;
-  }
-
-  .map-link:hover {
-    opacity: 0.9;
+    overflow: visible;
   }
 
   .map-image {
@@ -979,6 +976,13 @@
     height: auto;
     border-radius: 0;
     box-shadow: none;
+    display: block;
+    transition: transform 0.3s ease;
+    transform-origin: center center;
+  }
+
+  .map-link:hover .map-image {
+    transform: scale(1.08);
   }
 
   .contact-info {
