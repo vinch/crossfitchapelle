@@ -563,12 +563,10 @@
 
   .schedule-time {
     font-weight: bold;
-    color: #333;
   }
 
   .schedule-type {
     font-size: 0.9rem;
-    color: #666;
   }
 
   .schedule-actions {

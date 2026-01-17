@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { createClient } from '$lib/supabase/client';
-  import { onMount } from 'svelte';
-  import type { CourseType, CourseTypeInsert, CourseTypeUpdate } from '$lib/types/course-type';
+  import { createClient } from "$lib/supabase/client";
+  import { onMount } from "svelte";
+  import type {
+    CourseType,
+    CourseTypeInsert,
+    CourseTypeUpdate,
+  } from "$lib/types/course-type";
 
   let supabase = createClient();
   let courseTypes = $state<CourseType[]>([]);
@@ -11,10 +15,12 @@
   // Formulaire et modale
   let editingId = $state<string | null>(null);
   let showModal = $state(false);
-  let formData = $state<CourseTypeInsert & { color?: string; text_color?: string }>({
-    name: '',
-    color: '#f0f0f0',
-    text_color: '#000000',
+  let formData = $state<
+    CourseTypeInsert & { color?: string; text_color?: string }
+  >({
+    name: "",
+    color: "#f0f0f0",
+    text_color: "#000000",
   });
 
   onMount(async () => {
@@ -27,14 +33,14 @@
 
     try {
       const { data, error: fetchError } = await supabase
-        .from('course_types')
-        .select('*')
-        .order('name');
+        .from("course_types")
+        .select("*")
+        .order("name");
 
       if (fetchError) throw fetchError;
       courseTypes = data || [];
     } catch (err: any) {
-      error = err.message || 'Erreur lors du chargement des données';
+      error = err.message || "Erreur lors du chargement des données";
     } finally {
       loading = false;
     }
@@ -43,9 +49,9 @@
   function startAdd() {
     editingId = null;
     formData = {
-      name: '',
-      color: '#f0f0f0',
-      text_color: '#000000',
+      name: "",
+      color: "#f0f0f0",
+      text_color: "#000000",
     };
     showModal = true;
   }
@@ -54,8 +60,8 @@
     editingId = courseType.id;
     formData = {
       name: courseType.name,
-      color: (courseType as any).color || '#f0f0f0',
-      text_color: (courseType as any).text_color || '#000000',
+      color: (courseType as any).color || "#f0f0f0",
+      text_color: (courseType as any).text_color || "#000000",
     };
     showModal = true;
   }
@@ -64,17 +70,17 @@
     editingId = null;
     showModal = false;
     formData = {
-      name: '',
-      color: '#f0f0f0',
-      text_color: '#000000',
+      name: "",
+      color: "#f0f0f0",
+      text_color: "#000000",
     };
   }
 
   async function isCourseTypeUsed(courseTypeId: string): Promise<boolean> {
     const { data, error } = await supabase
-      .from('schedules')
-      .select('id')
-      .eq('course_type_id', courseTypeId)
+      .from("schedules")
+      .select("id")
+      .eq("course_type_id", courseTypeId)
       .limit(1);
 
     if (error) throw error;
@@ -84,29 +90,62 @@
   function normalizeColor(color: string): string {
     // Enlever les espaces et convertir en minuscules
     let normalized = color.trim().toLowerCase();
-    
+
     // Si pas de #, l'ajouter
-    if (!normalized.startsWith('#')) {
-      normalized = '#' + normalized;
+    if (!normalized.startsWith("#")) {
+      normalized = "#" + normalized;
     }
-    
+
     // Vérifier que c'est un code hexadécimal valide (6 caractères après #)
     if (!/^#[0-9a-f]{6}$/.test(normalized)) {
       // Si c'est un code court (3 caractères), le convertir en long
       if (/^#[0-9a-f]{3}$/.test(normalized)) {
-        normalized = '#' + normalized[1] + normalized[1] + normalized[2] + normalized[2] + normalized[3] + normalized[3];
+        normalized =
+          "#" +
+          normalized[1] +
+          normalized[1] +
+          normalized[2] +
+          normalized[2] +
+          normalized[3] +
+          normalized[3];
       } else {
-        // Sinon, retourner la couleur par défaut
-        return '#f0f0f0';
+        // Sinon, retourner null pour indiquer une couleur invalide
+        return "";
       }
     }
-    
+
     return normalized;
+  }
+
+  function isValidColor(color: string | undefined): boolean {
+    if (!color) return false;
+    const normalized = normalizeColor(color);
+    return normalized !== "" && /^#[0-9a-f]{6}$/.test(normalized);
+  }
+
+  function getPreviewColor(color: string | undefined): string | null {
+    if (!color) return null;
+    const normalized = normalizeColor(color);
+    if (normalized && /^#[0-9a-f]{6}$/.test(normalized)) {
+      return normalized;
+    }
+    return null;
   }
 
   async function saveCourseType() {
     if (!formData.name?.trim()) {
-      error = 'Le nom est requis';
+      error = "Le nom est requis";
+      return;
+    }
+
+    // Valider les couleurs
+    if (!isValidColor(formData.color)) {
+      error = "La couleur de fond n'est pas valide";
+      return;
+    }
+
+    if (!isValidColor(formData.text_color)) {
+      error = "La couleur de texte n'est pas valide";
       return;
     }
 
@@ -121,14 +160,17 @@
     try {
       if (editingId) {
         // Vérifier si le type est utilisé et si le nom change
-        const originalCourseType = courseTypes.find((ct) => ct.id === editingId);
+        const originalCourseType = courseTypes.find(
+          (ct) => ct.id === editingId
+        );
         const isUsed = await isCourseTypeUsed(editingId);
-        const nameChanged = originalCourseType && originalCourseType.name !== formData.name;
+        const nameChanged =
+          originalCourseType && originalCourseType.name !== formData.name;
 
         if (isUsed && nameChanged) {
           if (
             !confirm(
-              'Attention : Ce type de cours est utilisé par des horaires. Êtes-vous sûr de vouloir le renommer ?'
+              "Attention : Ce type de cours est utilisé par des horaires. Êtes-vous sûr de vouloir le renommer ?"
             )
           ) {
             return;
@@ -136,18 +178,18 @@
         }
 
         const { error: updateError } = await supabase
-          .from('course_types')
+          .from("course_types")
           .update({
             name: formData.name,
             color: formData.color,
             text_color: formData.text_color,
           } as any)
-          .eq('id', editingId);
+          .eq("id", editingId);
 
         if (updateError) throw updateError;
       } else {
         const { error: insertError } = await supabase
-          .from('course_types')
+          .from("course_types")
           .insert([
             {
               name: formData.name,
@@ -164,7 +206,7 @@
       showModal = false;
       error = null;
     } catch (err: any) {
-      error = err.message || 'Erreur lors de la sauvegarde';
+      error = err.message || "Erreur lors de la sauvegarde";
     }
   }
 
@@ -174,28 +216,28 @@
       const isUsed = await isCourseTypeUsed(id);
 
       if (isUsed) {
-        error = 'Impossible de supprimer ce type de cours car il est utilisé par des horaires';
+        error =
+          "Impossible de supprimer ce type de cours car il est utilisé par des horaires";
         return;
       }
 
-      if (!confirm('Êtes-vous sûr de vouloir supprimer ce type de cours ?')) {
+      if (!confirm("Êtes-vous sûr de vouloir supprimer ce type de cours ?")) {
         return;
       }
 
       const { error: deleteError } = await supabase
-        .from('course_types')
+        .from("course_types")
         .delete()
-        .eq('id', id);
+        .eq("id", id);
 
       if (deleteError) throw deleteError;
 
       await loadData();
       error = null;
     } catch (err: any) {
-      error = err.message || 'Erreur lors de la suppression';
+      error = err.message || "Erreur lors de la suppression";
     }
   }
-
 </script>
 
 <div class="admin-page">
@@ -233,18 +275,24 @@
                   <div class="color-display">
                     <span
                       class="color-badge"
-                      style="background-color: {(courseType as any).color || '#f0f0f0'}"
+                      style="background-color: {(courseType as any).color ||
+                        '#f0f0f0'}"
                     ></span>
-                    <span class="color-value">{(courseType as any).color || '#f0f0f0'}</span>
+                    <span class="color-value"
+                      >{(courseType as any).color || "#f0f0f0"}</span
+                    >
                   </div>
                 </td>
                 <td>
                   <div class="color-display">
                     <span
                       class="color-badge"
-                      style="background-color: {(courseType as any).text_color || '#000000'}"
+                      style="background-color: {(courseType as any)
+                        .text_color || '#000000'}"
                     ></span>
-                    <span class="color-value">{(courseType as any).text_color || '#000000'}</span>
+                    <span class="color-value"
+                      >{(courseType as any).text_color || "#000000"}</span
+                    >
                   </div>
                 </td>
                 <td>
@@ -288,7 +336,7 @@
         role="document"
       >
         <div class="modal-header">
-          <h2>{editingId ? 'Modifier' : 'Ajouter'} un type de cours</h2>
+          <h2>{editingId ? "Modifier" : "Ajouter"} un type de cours</h2>
           <button class="modal-close" onclick={cancelEdit} aria-label="Fermer">
             ×
           </button>
@@ -314,66 +362,73 @@
             <label for="color">Couleur de fond</label>
             <div class="color-input-group">
               <input
-                type="color"
+                type="text"
                 id="color"
-                bind:value={formData.color}
-                class="color-picker"
+                value={formData.color}
+                class="color-text"
+                placeholder="#f0f0f0"
                 oninput={(e) => {
                   formData.color = (e.target as HTMLInputElement).value;
                 }}
               />
-              <input
-                type="text"
-                bind:value={formData.color}
-                class="color-text"
-                placeholder="#f0f0f0"
-                oninput={(e) => {
-                  const value = (e.target as HTMLInputElement).value;
-                  formData.color = normalizeColor(value);
-                  // Mettre à jour le color picker si possible
-                  const colorPicker = document.getElementById('color') as HTMLInputElement;
-                  if (colorPicker && /^#[0-9a-f]{6}$/i.test(formData.color)) {
-                    colorPicker.value = formData.color;
-                  }
-                }}
-              />
+              {#if getPreviewColor(formData.color)}
+                <div
+                  class="color-preview"
+                  style="background-color: {getPreviewColor(formData.color)}"
+                  title={getPreviewColor(formData.color) || ""}
+                ></div>
+              {:else}
+                <div
+                  class="color-preview invalid"
+                  title="Couleur invalide"
+                ></div>
+              {/if}
             </div>
-            <small>Choisissez la couleur de fond pour identifier ce type de cours</small>
+            <small
+              >Choisissez la couleur de fond pour identifier ce type de cours</small
+            >
           </div>
 
           <div class="form-group">
             <label for="text_color">Couleur de texte</label>
             <div class="color-input-group">
               <input
-                type="color"
+                type="text"
                 id="text_color"
-                bind:value={formData.text_color}
-                class="color-picker"
+                value={formData.text_color}
+                class="color-text"
+                placeholder="#000000"
                 oninput={(e) => {
                   formData.text_color = (e.target as HTMLInputElement).value;
                 }}
               />
-              <input
-                type="text"
-                bind:value={formData.text_color}
-                class="color-text"
-                placeholder="#000000"
-                oninput={(e) => {
-                  const value = (e.target as HTMLInputElement).value;
-                  formData.text_color = normalizeColor(value);
-                  // Mettre à jour le color picker si possible
-                  const textColorPicker = document.getElementById('text_color') as HTMLInputElement;
-                  if (textColorPicker && /^#[0-9a-f]{6}$/i.test(formData.text_color)) {
-                    textColorPicker.value = formData.text_color;
-                  }
-                }}
-              />
+              {#if getPreviewColor(formData.text_color)}
+                <div
+                  class="color-preview"
+                  style="background-color: {getPreviewColor(
+                    formData.text_color
+                  )}"
+                  title={getPreviewColor(formData.text_color) || ""}
+                ></div>
+              {:else}
+                <div
+                  class="color-preview invalid"
+                  title="Couleur invalide"
+                ></div>
+              {/if}
             </div>
             <small>Choisissez la couleur du texte pour ce type de cours</small>
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn-primary">Enregistrer</button>
+            <button
+              type="submit"
+              class="btn-primary"
+              disabled={!isValidColor(formData.color) ||
+                !isValidColor(formData.text_color)}
+            >
+              Enregistrer
+            </button>
             <button type="button" class="btn-secondary" onclick={cancelEdit}>
               Annuler
             </button>
@@ -413,8 +468,13 @@
     transition: background-color 0.3s ease;
   }
 
-  .btn-primary:hover {
+  .btn-primary:hover:not(:disabled) {
     background-color: #333;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   .error-message {
@@ -537,17 +597,38 @@
     align-items: center;
   }
 
-  .color-picker {
-    width: 60px;
-    height: 40px;
-    padding: 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
   .color-text {
     flex: 1;
+  }
+
+  .color-preview {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .color-preview.invalid {
+    background-color: #f0f0f0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 5px,
+      #ccc 5px,
+      #ccc 10px
+    );
+    position: relative;
+  }
+
+  .color-preview.invalid::after {
+    content: "✕";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #dc3545;
+    font-weight: bold;
   }
 
   .color-display {
@@ -641,7 +722,6 @@
     background-color: #f9f9f9;
   }
 
-
   .table-actions {
     display: flex;
     gap: 0.5rem;
@@ -696,4 +776,3 @@
     }
   }
 </style>
-
