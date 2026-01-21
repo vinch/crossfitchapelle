@@ -75,6 +75,18 @@
     showScheduleModal = false;
   }
 
+  // Bloquer le scroll quand la modale est ouverte
+  $effect(() => {
+    if (showScheduleModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  });
+
   let lastHoveredImage = $state<string | null>(null);
 
   function handleImageHover(imageId: string) {
@@ -84,7 +96,7 @@
   const menuItems = [
     { id: "accueil", label: "Accueil" },
     { id: "a-propos", label: "À propos" },
-    { id: "tarifs", label: "Tarifs" },
+    { id: "abonnements", label: "Abonnements" },
     { id: "horaires", label: "Horaires" },
     { id: "contact", label: "Contact" },
   ];
@@ -191,7 +203,7 @@
     start1: string,
     end1: string,
     start2: string,
-    end2: string
+    end2: string,
   ): boolean {
     const s1 = timeToMinutes(start1);
     const e1 = timeToMinutes(end1);
@@ -211,7 +223,7 @@
   // Organise les horaires d'un jour avec gestion des chevauchements via classes CSS
   // Utilise la priorité en DB (1, 2, 3) pour déterminer la position horizontale
   function organizeSchedulesWithOverlap(
-    daySchedules: ScheduleWithCourseType[]
+    daySchedules: ScheduleWithCourseType[],
   ): ScheduledItem[] {
     if (daySchedules.length === 0) return [];
 
@@ -245,7 +257,7 @@
               schedule.start_hour,
               schedule.end_hour,
               other.start_hour,
-              other.end_hour
+              other.end_hour,
             )
           ) {
             overlapping.push(other);
@@ -351,7 +363,7 @@
       </p>
       <a
         href="mailto:info@crossfitchapelle.com?subject={encodeURIComponent(
-          "Je voudrais m'inscrire aux initiations"
+          "Je voudrais m'inscrire aux initiations",
         )}"
         class="cta-button">Je m'inscris aux initiations</a
       >
@@ -375,7 +387,7 @@
           </p>
           <a
             href="mailto:info@crossfitchapelle.com?subject={encodeURIComponent(
-              "Je voudrais m'inscrire aux initiations"
+              "Je voudrais m'inscrire aux initiations",
             )}"
             class="cta-button">Rejoignez-nous</a
           >
@@ -419,7 +431,7 @@
     </div>
   </section>
 
-  <section id="tarifs" class="section">
+  <section id="abonnements" class="section">
     <div class="section-content">
       <div class="section-title-banner">
         <p class="section-subtitle">Rejoignez la famille</p>
@@ -431,7 +443,7 @@
             <h3>Sans durée d'engagement</h3>
           </div>
           <div class="pricing-body">
-            <p class="pricing-price">Tarif sur demande*</p>
+            <p class="pricing-price">Tarif standard*</p>
             <ul class="pricing-features">
               <li>Accès illimité à la salle lors des horaires Free Access</li>
               <li>
@@ -447,7 +459,7 @@
             <h3>Engagement minimum 12 mois</h3>
           </div>
           <div class="pricing-body">
-            <p class="pricing-price yellow">Tarif sur demande*</p>
+            <p class="pricing-price yellow">Tarif réduit*</p>
             <ul class="pricing-features">
               <li>Accès illimité à la salle lors des horaires Free Access</li>
               <li>
@@ -461,7 +473,7 @@
       <div class="pricing-cta">
         <a
           href="mailto:info@crossfitchapelle.com?subject={encodeURIComponent(
-            "Je voudrais m'inscrire aux initiations"
+            "Je voudrais m'inscrire aux initiations",
           )}"
           class="cta-button"
         >
@@ -627,7 +639,7 @@
             <span class="schedule-modal-label">Horaire :</span>
             <span class="schedule-modal-value"
               >{DAYS_OF_WEEK[selectedSchedule.day - 1]} de {formatTime(
-                selectedSchedule.start_hour
+                selectedSchedule.start_hour,
               )} à {formatTime(selectedSchedule.end_hour)}</span
             >
           </div>
@@ -931,7 +943,7 @@
     background-color: #333;
   }
 
-  #tarifs {
+  #abonnements {
     background-color: #ddd;
   }
 
@@ -1511,7 +1523,7 @@
     transform: translateY(-2px);
   }
 
-  /* Tarifs */
+  /* Abonnements */
   .pricing-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

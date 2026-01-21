@@ -84,6 +84,18 @@
     };
   }
 
+  // Bloquer le scroll quand la modale est ouverte
+  $effect(() => {
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  });
+
   async function isCourseTypeUsed(courseTypeId: string): Promise<boolean> {
     const { data, error } = await supabase
       .from("schedules")
