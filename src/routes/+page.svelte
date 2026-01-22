@@ -409,8 +409,6 @@
                 Accès à 1 WOD par jour et tous les jours si vous le souhaitez
               </li>
             </ul>
-            <p class="pricing-note">*25€ de frais annuels</p>
-            <p class="pricing-note">*1 mois de préavis en cas de résiliation</p>
           </div>
         </div>
         <div class="pricing-card dark">
@@ -425,7 +423,6 @@
                 Accès à 1 WOD par jour et tous les jours si vous le souhaitez
               </li>
             </ul>
-            <p class="pricing-note">*25€ de frais annuels</p>
           </div>
         </div>
       </div>
