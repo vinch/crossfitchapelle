@@ -87,7 +87,9 @@
     {:else}
       <nav class="nav">
         <a href="/" class="nav-link back-link">
-          <span class="back-arrow">←</span> Retour au site
+          <span class="back-arrow">←</span>
+          <span class="back-text-full">Retour au site</span>
+          <span class="back-text-short">Retour</span>
         </a>
       </nav>
     {/if}
@@ -240,6 +242,10 @@
     line-height: 1;
   }
 
+  .back-text-short {
+    display: none;
+  }
+
   /* Menu hamburger */
   .hamburger {
     display: none;
@@ -371,6 +377,14 @@
     .mobile-nav {
       display: block;
       top: 80px;
+    }
+
+    .back-text-full {
+      display: none;
+    }
+
+    .back-text-short {
+      display: inline;
     }
   }
 </style>
