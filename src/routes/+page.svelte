@@ -402,7 +402,7 @@
             <h3>Sans durée d'engagement</h3>
           </div>
           <div class="pricing-body">
-            <p class="pricing-price">Tarif standard*</p>
+            <p class="pricing-price">Tarif standard</p>
             <ul class="pricing-features">
               <li>Accès illimité à la salle lors des horaires Free Access</li>
               <li>
@@ -416,7 +416,7 @@
             <h3>Engagement minimum 12 mois</h3>
           </div>
           <div class="pricing-body">
-            <p class="pricing-price yellow">Tarif réduit*</p>
+            <p class="pricing-price yellow">Tarif réduit</p>
             <ul class="pricing-features">
               <li>Accès illimité à la salle lors des horaires Free Access</li>
               <li>
