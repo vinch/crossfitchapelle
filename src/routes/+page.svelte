@@ -3,6 +3,8 @@
   import { createClient } from "$lib/supabase/client";
   import type { ScheduleWithCourseType } from "$lib/types/schedule";
   import { DAYS_OF_WEEK } from "$lib/types/schedule";
+  import Header from "$lib/components/Header.svelte";
+  import Footer from "$lib/components/Footer.svelte";
 
   let activeSection = $state<string>("accueil");
   let isScrolling = $state<boolean>(false);
@@ -289,59 +291,16 @@
   }
 </script>
 
-<header class="header" class:scrolled={isScrolled}>
-  <div class="header-container">
-    <div class="logo-container">
-      <button class="logo-button" onclick={scrollToTop} type="button">
-        <img src="/logo.png" alt="Logo CrossFit Chapelle" class="logo" />
-      </button>
-    </div>
-    <nav class="nav desktop-nav">
-      <ul class="nav-list">
-        {#each menuItems as item}
-          <li class="nav-item">
-            <a
-              href="#{item.id}"
-              class="nav-link"
-              class:active={activeSection === item.id}
-              onclick={(e) => handleLinkClick(item.id, e)}
-            >
-              {item.label}
-            </a>
-          </li>
-        {/each}
-      </ul>
-    </nav>
-    <button
-      class="hamburger"
-      onclick={toggleMobileMenu}
-      aria-label="Menu"
-      aria-expanded={mobileMenuOpen}
-    >
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
-  </div>
-  {#if mobileMenuOpen}
-    <nav class="mobile-nav">
-      <ul class="mobile-nav-list">
-        {#each menuItems as item}
-          <li class="mobile-nav-item">
-            <a
-              href="#{item.id}"
-              class="mobile-nav-link"
-              class:active={activeSection === item.id}
-              onclick={(e) => handleLinkClick(item.id, e)}
-            >
-              {item.label}
-            </a>
-          </li>
-        {/each}
-      </ul>
-    </nav>
-  {/if}
-</header>
+<Header
+  variant="full"
+  {isScrolled}
+  {activeSection}
+  {mobileMenuOpen}
+  {menuItems}
+  onLogoClick={scrollToTop}
+  onLinkClick={handleLinkClick}
+  onToggleMobileMenu={toggleMobileMenu}
+/>
 
 <main class="main">
   <section id="accueil" class="section hero-section">
@@ -665,53 +624,7 @@
   </div>
 {/if}
 
-<footer class="footer">
-  <div class="footer-container">
-    <div class="footer-content">
-      <div class="footer-social">
-        <a
-          href="https://facebook.com/crossfitchapelle"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-link"
-          aria-label="Facebook"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="social-icon"
-          >
-            <path
-              d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-            />
-          </svg>
-        </a>
-        <a
-          href="https://instagram.com/crossfitchapelle"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-link"
-          aria-label="Instagram"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="social-icon"
-          >
-            <path
-              d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-            />
-          </svg>
-        </a>
-      </div>
-      <div class="footer-copyright">
-        <p>© {new Date().getFullYear()} CrossFit Chapelle</p>
-      </div>
-    </div>
-  </div>
-</footer>
+<Footer />
 
 <style>
   :global(html) {
@@ -726,198 +639,6 @@
       -apple-system,
       sans-serif;
     background-color: #333;
-  }
-
-  .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: #000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    height: 120px;
-    transition: height 0.3s ease;
-  }
-
-  .header.scrolled {
-    height: 80px;
-  }
-
-  .header-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    height: 120px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: height 0.3s ease;
-  }
-
-  .header.scrolled .header-container {
-    height: 80px;
-  }
-
-  .logo-container {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-  }
-
-  .logo-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.3s ease;
-  }
-
-  .logo-button:hover {
-    opacity: 0.8;
-  }
-
-  .logo {
-    height: 86px;
-    width: auto;
-    display: block;
-    transition: height 0.3s ease;
-  }
-
-  .header.scrolled .logo {
-    height: 60px;
-  }
-
-  .header.scrolled .logo {
-    height: 60px;
-  }
-
-  .nav {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .nav-list {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 2rem;
-  }
-
-  .nav-item {
-    margin: 0;
-  }
-
-  .nav-link {
-    font-size: 1rem;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    transition:
-      color 0.3s ease,
-      text-decoration 0.3s ease;
-    text-decoration: none;
-    position: relative;
-    display: inline-block;
-  }
-
-  .nav-link:hover {
-    color: #ffde01;
-  }
-
-  .nav-link.active {
-    color: #ffde01;
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-    text-underline-offset: 8px;
-  }
-
-  /* Menu hamburger */
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    z-index: 1001;
-  }
-
-  .hamburger-line {
-    width: 25px;
-    height: 3px;
-    background-color: #fff;
-    transition: all 0.3s ease;
-    border-radius: 2px;
-    transform-origin: center;
-  }
-
-  .hamburger[aria-expanded="true"] .hamburger-line:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-  }
-
-  .hamburger[aria-expanded="true"] .hamburger-line:nth-child(2) {
-    opacity: 0;
-  }
-
-  .hamburger[aria-expanded="true"] .hamburger-line:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-  }
-
-  /* Menu mobile */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    top: 120px;
-    left: 0;
-    right: 0;
-    background-color: #000;
-    z-index: 1000;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    animation: slideDown 0.3s ease-out;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .mobile-nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 1rem 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .mobile-nav-item {
-    margin: 0;
-  }
-
-  .mobile-nav-link {
-    display: block;
-    font-size: 1rem;
-    color: #fff;
-    padding: 1rem 2rem;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-  }
-
-  .mobile-nav-link:hover,
-  .mobile-nav-link.active {
-    background-color: #333;
-    color: #ffde01;
   }
 
   .main {
@@ -1735,55 +1456,6 @@
 
   /* Responsive */
   @media (max-width: 1264px) {
-    .header {
-      height: 80px;
-    }
-
-    .header-container {
-      height: 80px;
-    }
-
-    .logo {
-      height: 60px;
-    }
-
-    .nav-list {
-      gap: 1rem;
-    }
-
-    .main {
-      margin-top: 80px;
-    }
-
-    .hero-section {
-      min-height: calc(100vh - 80px);
-    }
-  }
-
-  @media (max-width: 1024px) {
-    .header-container {
-      padding: 0 1rem;
-    }
-
-    .nav-list {
-      gap: 0rem;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .desktop-nav {
-      display: none;
-    }
-
-    .hamburger {
-      display: flex;
-    }
-
-    .mobile-nav {
-      display: block;
-      top: 80px;
-    }
-
     .main {
       margin-top: 80px;
     }
@@ -1928,72 +1600,7 @@
     }
   }
 
-  .footer {
-    background-color: #000;
-    color: #fff;
-    padding: 3rem 2rem;
-  }
-
-  .footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .footer-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .footer-copyright {
-    text-align: center;
-    color: #ccc;
-    font-size: 0.9rem;
-  }
-
-  .footer-copyright p {
-    margin: 0;
-  }
-
-  .footer-social {
-    display: flex;
-    gap: 2rem;
-  }
-
-  .social-link {
-    color: #fff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.3s ease;
-  }
-
-  .social-link:hover {
-    color: #ffde01;
-  }
-
-  .social-icon {
-    width: 32px;
-    height: 32px;
-    fill: currentColor;
-  }
-
   @media (max-width: 768px) {
-    .footer {
-      padding: 2rem 1rem;
-    }
-
-    .footer-social {
-      gap: 1.5rem;
-    }
-
-    .social-link {
-      font-size: 0.9rem;
-    }
-
     .section-title-banner {
       margin-bottom: 1.5rem;
     }
