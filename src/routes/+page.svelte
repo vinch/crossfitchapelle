@@ -1760,11 +1760,17 @@
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .header-container {
       padding: 0 1rem;
     }
 
+    .nav-list {
+      gap: 0rem;
+    }
+  }
+
+  @media (max-width: 768px) {
     .desktop-nav {
       display: none;
     }
