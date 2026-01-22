@@ -86,7 +86,9 @@
       </button>
     {:else}
       <nav class="nav">
-        <a href="/" class="nav-link back-link">Retour au site</a>
+        <a href="/" class="nav-link back-link">
+          <span class="back-arrow">←</span> Retour au site
+        </a>
       </nav>
     {/if}
   </div>
@@ -224,11 +226,18 @@
     padding: 0.5rem 1rem;
     transition: color 0.3s ease;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .back-link:hover {
     color: #ffde01;
+  }
+
+  .back-arrow {
+    font-size: 1.2rem;
+    line-height: 1;
   }
 
   /* Menu hamburger */
