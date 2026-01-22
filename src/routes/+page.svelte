@@ -1734,18 +1734,35 @@
   }
 
   /* Responsive */
-  @media (max-width: 768px) {
+  @media (max-width: 1264px) {
     .header {
       height: 80px;
     }
 
     .header-container {
-      padding: 0 1rem;
       height: 80px;
     }
 
     .logo {
       height: 60px;
+    }
+
+    .nav-list {
+      gap: 1rem;
+    }
+
+    .main {
+      margin-top: 80px;
+    }
+
+    .hero-section {
+      min-height: calc(100vh - 80px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header-container {
+      padding: 0 1rem;
     }
 
     .desktop-nav {
