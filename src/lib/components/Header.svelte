@@ -171,14 +171,17 @@
   }
 
   .logo {
-    height: 86px;
+    height: auto;
+    max-height: 86px;
     width: auto;
+    max-width: 450px;
     display: block;
-    transition: height 0.3s ease;
+    object-fit: contain;
+    transition: max-height 0.3s ease;
   }
 
   .header.scrolled .logo {
-    height: 60px;
+    max-height: 60px;
   }
 
   .nav {
